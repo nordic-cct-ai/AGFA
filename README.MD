@@ -1,3 +1,4 @@
+# Original README instructions: 
 This is the code for the paper "**AGFA-Net: Attention-Guided Feature-Aggregated Network for Coronary Artery Segmentation using Computed Tomography Angiography**"
 
 Dataset: CCTA dataset
@@ -15,6 +16,23 @@ Explanation for the code:
 4. test_AGFANet.py   Test model, results for one person, subject level.
 
 5. Visual3D_AGFANet.ipynb      View a 3D segmentation image of a person.
+
+# CCTA-AI README instructions:
+
+See AGFA_env_dev.txt for environment instructions
+
+
+-python copy_data.py # copy data and save in AGFA format; change/update paths etc
+
+
+
+-python 01_saveDataToTrain.py # crop and save training data; update relevant paths
+
+
+
+-python train_AGFANet.py # update relevant parameters and paths/folders in args at the top of the script
+
+
 
 
 

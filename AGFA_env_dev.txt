@@ -1,0 +1,9 @@
+conda create -n cor_seg_base python=3.8
+conda activate cor_seg_base
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install matplotlib
+pip install numpy tqdm scikit-learn
+conda install conda-forge::simpleitk
+pip install opencv-python
+pip install nibabel
+pip install itk
