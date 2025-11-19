@@ -51,7 +51,7 @@ args = {
     'input_shape': (128, 160, 160),
     'snapshot': 50,
     'test_step': 1,
-    'model_path': '/home/lxy/lxy/001_CASnet/save_models_randomcrop',
+    'model_path': '/home/fredrik/Documents/GitHub/open_source_segmentation_codes/CAS-Net/save_models_randomcrop',
     'batch_size': 1,  # VNet 1 other 2
     'folder': 'folder3',
     'model_name': 'CSNet3D',  #UNet3D   CSNet3D
@@ -116,8 +116,8 @@ min_max_transform = MinMaxScale()
 from torch.utils.data import DataLoader
 
 # 文件夹路径
-data_folder = '/home/lxy/lxy/data_CCTA/train'
-data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask'
+data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_2/val'
+data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_2/valMask'
 # data_folder = '/home/lxy/lxy/data_CCTA/train/patches_img'
 # data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask/patches_mask'
 file_list_img = [f for f in os.listdir(data_folder) if f.endswith('.nii.gz')]
@@ -148,8 +148,9 @@ Test_Model = {'CSNet3D': CSNet3D,
 def load_net():
     model = Test_Model[args['model_name']](2, 1).to(device)
     ckpt_path = os.path.join(args['model_path'], args['model_name'] + '_' + args['folder'])
-    # modelname = ckpt_path + '/' + 'best_score' + '_checkpoint300epo.pkl'
-    modelname = ckpt_path + '/' + '2024-02-20-200.pkl'
+    modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
+    print(os.path.isfile(modelname))
+    #modelname = ckpt_path + '/' + '2024-02-20-200.pkl'
 
     model = nn.DataParallel(model)  # 并行
     checkpoint = torch.load(modelname)
@@ -212,6 +213,6 @@ new_dataset = TensorDataset(torch.cat([item[0] for item in new_data]),
                             torch.cat([item[1] for item in new_data]))
 print("Loaded new_dataset Size:", len(new_dataset))
 #  save 5  '.pth'  data
-torch.save(new_dataset, '/home/lxy/lxy/data_CCTA/dataset/new128_dataset001.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
+torch.save(new_dataset, '/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001_val.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
 
 

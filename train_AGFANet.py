@@ -48,10 +48,10 @@ args = {
     'input_shape': (128, 160, 160),
     'snapshot': 2,  # 50
     'test_step': 2,
-    'model_path': '/home/lxy/lxy/001_CASnet/save_models_randomcrop',
+    'model_path': '/home/fredrik/Documents/GitHub/open_source_segmentation_code/CAS-Net/save_models_randomcrop',
     'batch_size': 1,  # VNet 1 other 2
-    'folder': 'folder2',
-    'model_name': 'CSNet3D',  #UNet3D   CSNet3D
+    'folder': 'folder3',
+    'model_name': 'AGFANet',  #UNet3D   CSNet3D
 }
 
 best_score = [0]
@@ -109,35 +109,36 @@ min_max_transform = MinMaxScale()
 from torch.utils.data import DataLoader
 
 #  load dataset
-loaded_dataset1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_1.pth')
-print("Loaded loaded_dataset Size111:", len(loaded_dataset1))    # 
-loaded_dataset_small1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_middleThresh1.pth')
-concat_dataset1 = ConcatDataset([loaded_dataset1, loaded_dataset_small1])
-
-loaded_dataset2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_2.pth')
-print("Loaded loaded_dataset Size222:", len(loaded_dataset2))    # 
-concat_dataset22 = ConcatDataset([concat_dataset1, loaded_dataset2])
-
-loaded_dataset3 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_3.pth')
-print("Loaded loaded_dataset Size333:", len(loaded_dataset3))    # 
-concat_dataset33 = ConcatDataset([concat_dataset22, loaded_dataset3])
-# print("Loaded loaded_dataset Size:", len(concat_dataset3))    # 
-
-loaded_dataset4 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_4.pth')
-concat_dataset44 = ConcatDataset([concat_dataset33, loaded_dataset4])
-
-loaded_dataset_small2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_middleThresh2.pth')
-concat_dataset2 = ConcatDataset([concat_dataset44, loaded_dataset_small2])
-loaded_dataset_small3_1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_smallThresh1.pth')
-concat_dataset3_1 = ConcatDataset([concat_dataset2, loaded_dataset_small3_1])
-loaded_dataset_small3_2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_smallThresh2.pth')
-concat_dataset3_2 = ConcatDataset([concat_dataset3_1, loaded_dataset_small3_2])
-
-train_dataset = concat_dataset3_2
-
-loaded_dataset5 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_5.pth')
-print("Loaded loaded_dataset Size555:", len(loaded_dataset5))    # 
-validation_dataset = loaded_dataset5
+# loaded_dataset1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_1.pth')
+# print("Loaded loaded_dataset Size111:", len(loaded_dataset1))    #
+# loaded_dataset_small1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_middleThresh1.pth')
+# concat_dataset1 = ConcatDataset([loaded_dataset1, loaded_dataset_small1])
+#
+# loaded_dataset2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_2.pth')
+# print("Loaded loaded_dataset Size222:", len(loaded_dataset2))    #
+# concat_dataset22 = ConcatDataset([concat_dataset1, loaded_dataset2])
+#
+# loaded_dataset3 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_3.pth')
+# print("Loaded loaded_dataset Size333:", len(loaded_dataset3))    #
+# concat_dataset33 = ConcatDataset([concat_dataset22, loaded_dataset3])
+# # print("Loaded loaded_dataset Size:", len(concat_dataset3))    #
+#
+# loaded_dataset4 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_4.pth')
+# concat_dataset44 = ConcatDataset([concat_dataset33, loaded_dataset4])
+#
+# loaded_dataset_small2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_middleThresh2.pth')
+# concat_dataset2 = ConcatDataset([concat_dataset44, loaded_dataset_small2])
+# loaded_dataset_small3_1 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_smallThresh1.pth')
+# concat_dataset3_1 = ConcatDataset([concat_dataset2, loaded_dataset_small3_1])
+# loaded_dataset_small3_2 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds0003_smallThresh2.pth')
+# concat_dataset3_2 = ConcatDataset([concat_dataset3_1, loaded_dataset_small3_2])
+#
+# train_dataset = concat_dataset3_2
+#
+# loaded_dataset5 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_5.pth')
+# print("Loaded loaded_dataset Size555:", len(loaded_dataset5))    #
+train_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001.pth')
+validation_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001_val.pth')
 
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size_new, shuffle=True) # here can be True
 val_dataloader = DataLoader(validation_dataset, batch_size=batch_size_new, shuffle=True)
@@ -151,10 +152,11 @@ net = Test_Model[args['model_name']](2, 1).to(device)
 net = nn.DataParallel(net)
 
 ckpt_path = os.path.join(args['model_path'], args['model_name'] + '_' + args['folder'])
-modelname = ckpt_path + '/' + '2024-05-02-4.pkl'
+# modelname = ckpt_path + '/' + '2024-05-02-4.pkl'
+modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
 
-checkpoint = torch.load(modelname)
-net.load_state_dict(checkpoint)
+# checkpoint = torch.load(modelname)
+# net.load_state_dict(checkpoint)
 
 print("------------------------------------------")
 num_para = 0
