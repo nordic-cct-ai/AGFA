@@ -110,16 +110,16 @@ Test_Model = {'AGFANet': AGFANet,
               'UNet3D': UNet3D
               }
 
-data_folder = '/home/lxy/lxy/data_CCTA/train'
-data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask'
+data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/test'
+data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/testMask'
 file_list_img = [f for f in os.listdir(data_folder) if f.endswith('.nii.gz')]
 file_list_mask = [f for f in os.listdir(data_folder2) if f.endswith('.nii.gz')]
-file_list_img=sorted(file_list_img)
-file_list_mask=sorted(file_list_mask)
+test_img_list=sorted(file_list_img)
+test_mask_list=sorted(file_list_mask)
 print('file_list_img  shape:', len(file_list_img))  # 1000
 
-test_img_list = file_list_img[800:]   
-test_mask_list = file_list_mask[800:]
+#test_img_list = file_list_img[800:]
+#test_mask_list = file_list_mask[800:]
 
 dataset_img = CustomDataset(data_folder,test_img_list, transform=min_max_transform)
 dataset_mask = CustomDataset(data_folder2,test_mask_list)

@@ -1,4 +1,4 @@
-
+import sys
 import torch 
 import numpy as np 
 from PIL import Image
@@ -48,7 +48,7 @@ args = {
     'input_shape': (128, 160, 160),
     'snapshot': 2,  # 50
     'test_step': 2,
-    'model_path': '/home/fredrik/Documents/GitHub/open_source_segmentation_code/CAS-Net/save_models_randomcrop',
+    'model_path': '/cluster/home/fredf/cct_ai/CAS-Net/save_models_randomcrop',
     'batch_size': 1,  # VNet 1 other 2
     'folder': 'folder3',
     'model_name': 'AGFANet',  #UNet3D   CSNet3D
@@ -137,7 +137,15 @@ from torch.utils.data import DataLoader
 #
 # loaded_dataset5 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_5.pth')
 # print("Loaded loaded_dataset Size555:", len(loaded_dataset5))    #
-train_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset001_train_dev.pth')
+if len(sys.argv) > 1:
+    n_datasets_to_load = int(sys.argv[1])
+else:
+    n_datasets_to_load = 1
+train_dataset = torch.load(f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{0}_train_patch.pth')
+
+for n_data in range(1, n_datasets_to_load - 1):
+    dataset_to_add = torch.load(f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{n_data}_train_patch.pth')
+    train_dataset = ConcatDataset([train_dataset, dataset_to_add])
 validation_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset001_val_dev.pth')
 
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size_new, shuffle=True) # here can be True

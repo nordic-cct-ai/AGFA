@@ -117,10 +117,14 @@ min_max_transform = MinMaxScale()
 from torch.utils.data import DataLoader
 
 # 文件夹路径
-data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/train'
-data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/trainMask'
-#data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/val'
-#data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/valMask'
+process_case = "train"
+if process_case == "train":
+    data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/train'
+    data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/trainMask'
+else:
+
+    data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/val'
+    data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/valMask'
 # data_folder = '/home/lxy/lxy/data_CCTA/train/patches_img'
 # data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask/patches_mask'
 file_list_img = [f for f in os.listdir(data_folder) if f.endswith('.nii.gz')]
@@ -212,25 +216,32 @@ for batch_idx in range(len(dataloader_img)):
                         new_data.append((img_patch, mask_patch))
 
 
-num_parts = 8
-part_size = len(new_data) // num_parts  # Integer division for base size
-remainder = len(new_data) % num_parts  # Elements to distribute among first parts
+if process_case == "train":
+    num_parts = 8
+    part_size = len(new_data) // num_parts  # Integer division for base size
+    remainder = len(new_data) % num_parts  # Elements to distribute among first parts
 
-new_data_nested = []
-current_index = 0
-for i in range(num_parts):
-    # Add an extra element to the first 'remainder' parts
-    current_part_size = part_size + (1 if i < remainder else 0)
-    new_data_nested.append(new_data[current_index : current_index + current_part_size])
-    current_index += current_part_size
+    new_data_nested = []
+    current_index = 0
+    for i in range(num_parts):
+        # Add an extra element to the first 'remainder' parts
+        current_part_size = part_size + (1 if i < remainder else 0)
+        new_data_nested.append(new_data[current_index : current_index + current_part_size])
+        current_index += current_part_size
 
-for i in range(num_parts):
-            
-    print("len(new_data) : ",len(new_data))
-    new_dataset = TensorDataset(torch.cat([item[0] for item in new_data_nested[i]]),
-                                torch.cat([item[1] for item in new_data_nested[i]]))
+    for i in range(num_parts):
+
+        print("len(new_data) : ",len(new_data))
+        new_dataset = TensorDataset(torch.cat([item[0] for item in new_data_nested[i]]),
+                                    torch.cat([item[1] for item in new_data_nested[i]]))
+        print("Loaded new_dataset Size:", len(new_dataset))
+        #  save 5  '.pth'  data
+        torch.save(new_dataset, f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{i}_train_patch.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
+else:
+    print("len(new_data) : ", len(new_data))
+    new_dataset = TensorDataset(torch.cat([item[0] for item in new_data]),
+                                torch.cat([item[1] for item in new_data]))
     print("Loaded new_dataset Size:", len(new_dataset))
     #  save 5  '.pth'  data
-    torch.save(new_dataset, f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{i}_train_patch.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
-
-
+    torch.save(new_dataset,
+               f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset001_val_patch.pth')
