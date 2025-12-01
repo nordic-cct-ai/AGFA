@@ -146,7 +146,7 @@ train_dataset = torch.load(f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_im
 for n_data in range(1, n_datasets_to_load - 1):
     dataset_to_add = torch.load(f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{n_data}_train_patch.pth')
     train_dataset = ConcatDataset([train_dataset, dataset_to_add])
-validation_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset001_val_patch.pth')
+validation_dataset = torch.load('/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset001_val_patch.pth')
 
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size_new, shuffle=True) # here can be True
 val_dataloader = DataLoader(validation_dataset, batch_size=batch_size_new, shuffle=True)
