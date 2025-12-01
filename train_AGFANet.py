@@ -302,7 +302,7 @@ for epoch in range(num_epochs):
         if test_dice > max(best_score):
                 best_score.append(test_dice)
                 print("best_score: ",best_score)
-                with open(log_file, "w") as file_object:
+                with open(log_file, "a") as file_object:
                     file_object.write(f"new best_score:  {best_score}\n")
                     file_object.write(f'the best model will be saved at {modelname}\n')
                 modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
