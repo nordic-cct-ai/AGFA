@@ -48,7 +48,7 @@ args = {
     'input_shape': (128, 160, 160),
     'snapshot': 2,  # 50
     'test_step': 2,
-    'model_path': '/cluster/home/fredf/cct_ai/CAS-Net/save_models_randomcrop',
+    'model_path': '/cluster/home/fredf/cct_ai/AGFA/save_models_randomcrop',
     'batch_size': 1,  # VNet 1 other 2
     'folder': 'folder3',
     'model_name': 'AGFANet',  #UNet3D   CSNet3D
@@ -293,7 +293,7 @@ for epoch in range(num_epochs):
                                                                                                              test_fn,
                                                                                                              test_fp,
                                                                                                              test_dice))
-        with open(log_file, "w") as file_object:
+        with open(log_file, "a") as file_object:
             # Append a single line of text
             file_object.write("Average TP:{0:.4f}, average FN:{1:.4f},  average FP:{2:.4f},  average Dice:{3:.4f}\n".format(test_tp,
                                                                                                              test_fn,
@@ -303,7 +303,7 @@ for epoch in range(num_epochs):
                 best_score.append(test_dice)
                 print("best_score: ",best_score)
                 with open(log_file, "a") as file_object:
-                    file_object.write(f"new best_score:  {best_score}\n")
+                    file_object.write(f"new best_score:  {max(best_score)}\n")
                     file_object.write(f'the best model will be saved at {modelname}\n')
                 modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
                 print('the best model will be saved at {}'.format(modelname))
