@@ -159,9 +159,14 @@ Test_Model = {'AGFANet': AGFANet,
 net = Test_Model[args['model_name']](2, 1).to(device)
 net = nn.DataParallel(net)
 
-ckpt_path = os.path.join(args['model_path'], args['model_name'] + '_' + args['folder'])
+ckpt_path = os.path.join(args['model_path'], args['model_name'] + '_' + args['folder']) + f"_{n_datasets_to_load}"
+os.makedirs(ckpt_path, exist_ok=True)
 # modelname = ckpt_path + '/' + '2024-05-02-4.pkl'
 modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
+log_file  = ckpt_path + '/' + 'log_file.txt'
+with open(log_file, "w") as file_object:
+    # Append a single line of text
+    file_object.write("Starting to log metrics for case.\n")
 
 # checkpoint = torch.load(modelname)
 # net.load_state_dict(checkpoint)
@@ -288,9 +293,18 @@ for epoch in range(num_epochs):
                                                                                                              test_fn,
                                                                                                              test_fp,
                                                                                                              test_dice))
+        with open(log_file, "w") as file_object:
+            # Append a single line of text
+            file_object.write("Average TP:{0:.4f}, average FN:{1:.4f},  average FP:{2:.4f},  average Dice:{3:.4f}\n".format(test_tp,
+                                                                                                             test_fn,
+                                                                                                             test_fp,
+                                                                                                             test_dice))
         if test_dice > max(best_score):
                 best_score.append(test_dice)
                 print("best_score: ",best_score)
+                with open(log_file, "w") as file_object:
+                    file_object.write(f"new best_score:  {best_score}\n")
+                    file_object.write(f'the best model will be saved at {modelname}\n')
                 modelname = ckpt_path + '/' + 'best_score' + '_checkpoint.pkl'
                 print('the best model will be saved at {}'.format(modelname))
                 torch.save(net.state_dict(), modelname)
