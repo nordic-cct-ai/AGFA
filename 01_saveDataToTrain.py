@@ -45,13 +45,14 @@ batch_size = 1
 batch_size_new=64
 num_epochs=200   #  600
 patch_size = [128, 160, 160]    # [96, 96, 96]
+
 args = {
     # 'data_path': 'cta_project/data/npy',
     'epochs': 10,
     'input_shape': (128, 160, 160),
     'snapshot': 50,
     'test_step': 1,
-    'model_path': '/home/fredrik/Documents/GitHub/open_source_segmentation_codes/CAS-Net/save_models_randomcrop',
+    'model_path': '/cluster/home/fredf/cct_ai/CAS-Net/save_models_randomcrop',
     'batch_size': 1,  # VNet 1 other 2
     'folder': 'folder3',
     'model_name': 'CSNet3D',  #UNet3D   CSNet3D
@@ -116,10 +117,10 @@ min_max_transform = MinMaxScale()
 from torch.utils.data import DataLoader
 
 # 文件夹路径
-# data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/val'
-# data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/valMask'
-data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/train'
-data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/trainMask'
+data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/train'
+data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/trainMask'
+#data_folder = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/val'
+#data_folder2 = '/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/valMask'
 # data_folder = '/home/lxy/lxy/data_CCTA/train/patches_img'
 # data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask/patches_mask'
 file_list_img = [f for f in os.listdir(data_folder) if f.endswith('.nii.gz')]
@@ -230,6 +231,6 @@ for i in range(num_parts):
                                 torch.cat([item[1] for item in new_data_nested[i]]))
     print("Loaded new_dataset Size:", len(new_dataset))
     #  save 5  '.pth'  data
-    torch.save(new_dataset, f'/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset00{i}_train_patch.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
+    torch.save(new_dataset, f'/cluster/work/fredf/cct_ai_data/AGFA_data_test_1_imageCas/new128_dataset00{i}_train_patch.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
 
 
