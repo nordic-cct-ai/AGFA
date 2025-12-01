@@ -116,8 +116,10 @@ min_max_transform = MinMaxScale()
 from torch.utils.data import DataLoader
 
 # 文件夹路径
-data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_2/val'
-data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_2/valMask'
+# data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/val'
+# data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/valMask'
+data_folder = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/train'
+data_folder2 = '/media/fredrik/server_data/data_imageCas_restructured/subset_4/trainMask'
 # data_folder = '/home/lxy/lxy/data_CCTA/train/patches_img'
 # data_folder2 = '/home/lxy/lxy/data_CCTA/trainMask/patches_mask'
 file_list_img = [f for f in os.listdir(data_folder) if f.endswith('.nii.gz')]
@@ -189,7 +191,7 @@ for batch_idx in range(len(dataloader_img)):
             pred_patches = []
             mask_patches = []
             count=0
-
+            print(batch_idx)
             for d in range(0, depth - d_patch + 1, d_patch - overlap_depth):
                 for h in range(0, height - h_patch + 1, h_patch - overlap_height):
                     for w in range(0, width - w_patch + 1, w_patch - overlap_width):
@@ -204,15 +206,30 @@ for batch_idx in range(len(dataloader_img)):
                         mask_patch_npy=mask_patch1.numpy()
                         if np.sum(mask_patch_npy >0.5) < np.prod(mask_patch_npy.shape)* threshold:  # here is the mask
                             continue
-                        new_data.append((train_img1, train_mask1))
+                        #new_data.append((train_img1, train_mask1))
+                        print(img_patch.shape)
+                        new_data.append((img_patch, mask_patch))
 
 
+num_parts = 8
+part_size = len(new_data) // num_parts  # Integer division for base size
+remainder = len(new_data) % num_parts  # Elements to distribute among first parts
+
+new_data_nested = []
+current_index = 0
+for i in range(num_parts):
+    # Add an extra element to the first 'remainder' parts
+    current_part_size = part_size + (1 if i < remainder else 0)
+    new_data_nested.append(new_data[current_index : current_index + current_part_size])
+    current_index += current_part_size
+
+for i in range(num_parts):
             
-print("len(new_data) : ",len(new_data))
-new_dataset = TensorDataset(torch.cat([item[0] for item in new_data]),
-                            torch.cat([item[1] for item in new_data]))
-print("Loaded new_dataset Size:", len(new_dataset))
-#  save 5  '.pth'  data
-torch.save(new_dataset, '/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001_val.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
+    print("len(new_data) : ",len(new_data))
+    new_dataset = TensorDataset(torch.cat([item[0] for item in new_data_nested[i]]),
+                                torch.cat([item[1] for item in new_data_nested[i]]))
+    print("Loaded new_dataset Size:", len(new_dataset))
+    #  save 5  '.pth'  data
+    torch.save(new_dataset, f'/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset00{i}_train_patch.pth')  # new128_dataset001, new128_dataset002.....new128_dataset005
 
 

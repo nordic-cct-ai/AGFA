@@ -137,8 +137,8 @@ from torch.utils.data import DataLoader
 #
 # loaded_dataset5 = torch.load('/home/lxy/lxy/data_CCTA/dataset128/new128_ds002_5.pth')
 # print("Loaded loaded_dataset Size555:", len(loaded_dataset5))    #
-train_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001.pth')
-validation_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_2/dataset/new128_dataset001_val.pth')
+train_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset001_train_dev.pth')
+validation_dataset = torch.load('/media/fredrik/server_data/data_imageCas_restructured/subset_4/dataset/new128_dataset001_val_dev.pth')
 
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size_new, shuffle=True) # here can be True
 val_dataloader = DataLoader(validation_dataset, batch_size=batch_size_new, shuffle=True)

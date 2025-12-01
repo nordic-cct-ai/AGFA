@@ -2,8 +2,10 @@ import os
 import shutil
 import nibabel as nib
 
+# path_to_imagecas_data = "/media/fredrik/data/backup_IDUN/coronary_artery_segmentation/data/data_coronary_ImageCAS"
+# path_to_imagecas_data_restructured = "/media/fredrik/server_data/data_imageCas_restructured/subset_3"
 path_to_imagecas_data = "/media/fredrik/data/backup_IDUN/coronary_artery_segmentation/data/data_coronary_ImageCAS"
-path_to_imagecas_data_restructured = "/media/fredrik/server_data/data_imageCas_restructured/subset_2"
+path_to_imagecas_data_restructured = "/media/fredrik/server_data/data_imageCas_restructured/subset_4"
 train_folder = os.path.join(path_to_imagecas_data_restructured, "train")
 train_folder_label = os.path.join(path_to_imagecas_data_restructured, "trainMask")
 val_folder = os.path.join(path_to_imagecas_data_restructured, "val")
@@ -16,7 +18,7 @@ f_val = open("val.txt", "w")
 test_cases = []
 f_test = open("test.txt", "w")
 
-train_val_test_n = [50, 5, 10]
+train_val_test_n = [200, 10, 10]
 n_iter = 1
 n_iter_val = 1
 n_iter_test = 1
@@ -65,9 +67,10 @@ for tmp_case in training_cases:
     dst_img = os.path.join(train_folder, f"{tmp_case}.nii.gz")
     dst_label = os.path.join(train_folder_label, f"{tmp_case}.nii.gz")
     epi_img = nib.load(src_img)
-    if epi_img.shape[2] >= 275:
-        shutil.copyfile(src_img, dst_img)
-        shutil.copyfile(src_label, dst_label)
+    print(epi_img.shape)
+    #if epi_img.shape[2] >= 275:
+    shutil.copyfile(src_img, dst_img)
+    shutil.copyfile(src_label, dst_label)
 
 for tmp_case in validation_cases:
     case_folder = os.path.join(path_to_imagecas_data, tmp_case)
@@ -78,7 +81,11 @@ for tmp_case in validation_cases:
     dst_img = os.path.join(val_folder, f"{tmp_case}.nii.gz")
     dst_label = os.path.join(val_folder_label, f"{tmp_case}.nii.gz")
     epi_img = nib.load(src_img)
-    if epi_img.shape[2] >= 275:
-        shutil.copyfile(src_img, dst_img)
-        shutil.copyfile(src_label, dst_label)
+    print("val: ", epi_img.shape)
+    # if epi_img.shape[2] >= 275:
+    #     shutil.copyfile(src_img, dst_img)
+    #     shutil.copyfile(src_label, dst_label)
+    # else:
+    shutil.copyfile(src_img, dst_img)
+    shutil.copyfile(src_label, dst_label)
 
